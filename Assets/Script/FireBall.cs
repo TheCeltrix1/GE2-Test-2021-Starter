@@ -18,6 +18,8 @@ public class FireBall : MonoBehaviour
         canThrow = false;
         GameObject go = Instantiate(ball, this.transform.position, this.transform.rotation);
         go.GetComponent<Rigidbody>().velocity = go.transform.forward * _ballVelocity;
+        FindObjectOfType<Arrive>().enabled = false;
+        FindObjectOfType<Seek>().enabled = true;
         FindObjectOfType<Seek>().targetGameObject = go;
     }
 
