@@ -10,12 +10,12 @@ public class PickUpBall : MonoBehaviour
     private void Update()
     {
         if (FindObjectOfType<Seek>().targetGameObject && Vector3.Distance(this.transform.position, FindObjectOfType<Seek>().targetGameObject.transform.position) <= _pickUpRange) PickUp(FindObjectOfType<Seek>().targetGameObject);
-        Debug.Log(Vector3.Distance(this.transform.position, FindObjectOfType<FPSController>().transform.position));
-        if (Vector3.Distance(this.transform.position, FindObjectOfType<FPSController>().transform.position) <= 4)
+        /*if (Vector3.Distance(this.transform.position, FindObjectOfType<FPSController>().transform.position) <= 4)
         {
-            FindObjectOfType<Seek>().targetGameObject.transform.SetParent(null);
+            if(FindObjectOfType<Seek>().targetGameObject != null) FindObjectOfType<Seek>().targetGameObject.transform.SetParent(null);
             if (!GetComponent<AudioSource>().isPlaying) GetComponent<AudioSource>().Play();
-        }
+        }*/
+        DropBall();
     }
 
     private void PickUp(GameObject obj)
@@ -26,6 +26,17 @@ public class PickUpBall : MonoBehaviour
             obj.transform.SetParent(location.transform);
             FindObjectOfType<Seek>().enabled = false;
             FindObjectOfType<Arrive>().enabled = true;
+        }
+    }
+
+    private void DropBall()
+    {
+        if (Vector3.Distance(this.transform.position, FindObjectOfType<FPSController>().transform.position) <= 4)
+        {
+            FindObjectOfType<Seek>().targetGameObject.transform.position = location.transform.position;
+            FindObjectOfType<Seek>().targetGameObject.transform.SetParent(null);
+            FindObjectOfType<Seek>().enabled = true;
+            FindObjectOfType<Arrive>().enabled = false;
         }
     }
 }

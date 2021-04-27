@@ -23,9 +23,9 @@ public class FireBall : MonoBehaviour
         FindObjectOfType<Seek>().targetGameObject = go;
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerStay(Collider collision)
     {
-        if(collision.gameObject.name == "ball(Clone)")
+        if(collision.gameObject.tag == "Ball")
         {
             if (collision.gameObject.GetComponent<Rigidbody>().velocity.magnitude == 0) 
             {
