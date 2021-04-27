@@ -19,12 +19,9 @@ public class Boid : MonoBehaviour
     public float maxSpeed = 5.0f;
     public float maxForce = 10.0f;
     
-
-
     // Use this for initialization
     void Start()
     {
-
         SteeringBehaviour[] behaviours = GetComponents<SteeringBehaviour>();
 
         foreach (SteeringBehaviour b in behaviours)
@@ -36,6 +33,7 @@ public class Boid : MonoBehaviour
     public Vector3 SeekForce(Vector3 target)
     {
         Vector3 desired = target - transform.position;
+        desired.y = transform.position.y;
         desired.Normalize();
         desired *= maxSpeed;
         return desired - velocity;
@@ -44,6 +42,7 @@ public class Boid : MonoBehaviour
     public Vector3 ArriveForce(Vector3 target, float slowingDistance = 15.0f)
     {
         Vector3 toTarget = target - transform.position;
+        toTarget.y = transform.position.y;
 
         float distance = toTarget.magnitude;
         if (distance < 0.1f)
@@ -69,13 +68,11 @@ public class Boid : MonoBehaviour
         // 3. Truncated
         // 4. Running sum
 
-
         foreach (SteeringBehaviour b in behaviours)
         {
             if (b.isActiveAndEnabled)
             {
                 force += b.Calculate() * b.weight;
-
                 float f = force.magnitude;
                 if (f >= maxForce)
                 {
