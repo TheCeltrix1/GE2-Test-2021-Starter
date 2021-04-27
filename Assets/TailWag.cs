@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class TailWag : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private float _speed = 2f;
+    private float _maxTurn = 30;
 
-    // Update is called once per frame
     void Update()
     {
-        
+        WagBitchWag();
+    }
+
+    public void WagBitchWag()
+    {
+        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, Quaternion.Euler(0, _maxTurn, 0), _speed);
+        if (transform.localRotation == Quaternion.Euler(0, _maxTurn, 0)) _maxTurn = -_maxTurn;
     }
 }
