@@ -8,7 +8,7 @@ public class PickUpReturn : SteeringBehaviour
     public Transform ballHoldPosition;
     [HideInInspector] public GameObject targetBall;
     private bool _hasBall = false;
-    private float _dropDistance = 4;
+    private float _dropDistance = 5;
 
     private void Start()
     {
@@ -47,9 +47,10 @@ public class PickUpReturn : SteeringBehaviour
 
     public void DropBall()
     {
+        GetComponent<AudioSource>().Play();
         targetBall.GetComponent<Rigidbody>().useGravity = true;
         targetBall.transform.SetParent(null);
-        GetComponent<AudioSource>().Play();
+        //targetBall = null;
     }
 
     public void PickUpBall()
