@@ -6,8 +6,8 @@ public class PickUpReturn : SteeringBehaviour
 {
     private GameObject _player;
     public Transform ballHoldPosition;
-    [HideInInspector]public GameObject targetBall;
-    private bool _hasBall;
+    [HideInInspector] public GameObject targetBall;
+    private bool _hasBall = false;
     private float _dropDistance = 4;
 
     private void Start()
@@ -17,41 +17,45 @@ public class PickUpReturn : SteeringBehaviour
 
     public override Vector3 Calculate()
     {
-        Proximity();
-        return Vector3.zero/*boid.ArriveForce(targetPosition, slowingDistance)*/;
+        return Proximity();
     }
 
     public Vector3 Proximity()
     {
-        if (_hasBall && Vector3.Distance(this.transform.position, _player.transform.position) <= _dropDistance)
+        if (targetBall != null)
         {
-            _hasBall = false;
-            DropBall();
-        } 
-        else if (!_hasBall && Vector3.Distance(this.transform.position, _player.transform.position) > _dropDistance)
-        {
-            _hasBall = true;
-            PickUpBall();
-        } 
-        if (_hasBall)
-        {
-            return boid.ArriveForce(targetPosition, slowingDistance);
+            if (_hasBall && Vector3.Distance(this.transform.position, _player.transform.position) <= _dropDistance)
+            {
+                _hasBall = false;
+                DropBall();
+            }
+            else if (!_hasBall && Vector3.Distance(this.transform.position, _player.transform.position) > _dropDistance && Vector3.Distance(this.transform.position, targetBall.transform.position) <= _dropDistance)
+            {
+                _hasBall = true;
+                PickUpBall();
+            }
+            if (_hasBall) return boid.ArriveForce(_player.transform.position, .5f);
+            else if (!_hasBall) return boid.SeekForce(targetBall.transform.position);
         }
-        else if (!_hasBall)
+        else if (!targetBall)
         {
-            return boid.SeekForce(targetBall.transform.position);
+            /*if (Vector3.Distance(transform.position, _player.transform.position) <= 4) return Vector3.zero;
+            else*/ return boid.ArriveForce(_player.transform.position, 0.5f);
         }
+        return Vector3.zero;
     }
-    
+
     public void DropBall()
     {
         targetBall.GetComponent<Rigidbody>().useGravity = true;
         targetBall.transform.SetParent(null);
+        GetComponent<AudioSource>().Play();
     }
 
     public void PickUpBall()
     {
         targetBall.GetComponent<Rigidbody>().useGravity = false;
+        targetBall.transform.position = ballHoldPosition.transform.position;
         targetBall.transform.SetParent(ballHoldPosition);
     }
 }
